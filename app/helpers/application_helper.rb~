@@ -8,4 +8,4 @@ else
 "#{base_title} | #{@title}" # String interpolation
 end
 end
-en
+end
