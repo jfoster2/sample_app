@@ -42,7 +42,7 @@ describe "GET 'new'" do
  end
  it "should have an email field" do
   get 'new'
-  response.should have_selector("input[email='user[email]'][type='text']")
+  response.should have_selector("input[name='user[email]'][type='text']")
  end
  it "should have a password field" do
   get 'new'
@@ -86,6 +86,10 @@ end
 it "should redirect to the user show page" do
 post :create, :user => @attr
 response.should redirect_to(user_path(assigns(:user)))
+end
+it "should sign the user in" do
+post :create, :user => @attr
+controller.should be_signed_in
 end
 it "should have a welcome message" do
 post :create, :user => @attr
