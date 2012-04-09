@@ -4,7 +4,7 @@ describe PagesController do
   render_views
 
 before(:each) do
-   response.should have_selector("title",:content => "Ruby on Rails Tutorial Sample App")
+   @base_title = "Ruby on Rails Tutorial Sample App"
   end
 
   describe "GET 'home'" do
@@ -17,6 +17,46 @@ before(:each) do
       get 'home'
       response.should have_selector("title",
                         :content => @base_title + " | Home")
+    end
+    
+    describe "Display delete link" do
+
+      before(:each) do
+        # Login a valid user
+        @user = test_sign_in(Factory(:user))
+        
+        # Create another user
+        @attr = { :name => "New User",
+          :email => "user@example.com",
+          :password => "foobar",
+          :password_confirmation => "foobar" }
+        @other_user = Factory(:user, @attr)
+      end
+
+      describe "failure" do
+        
+        before(:each) do
+          @other_micropost = Factory(:micropost, :user => @other_user)
+          30.times { Factory(:micropost, :user => @other_user) }
+        end
+        
+        it "should not have a delete link for another user" do
+          get :home, :id => @other_user
+          response.should_not have_selector("span.action")
+        end
+      end
+      
+      describe "success" do
+        
+        before(:each) do
+          @micropost = Factory(:micropost, :user => @user)
+        end
+
+        it "should have a delete link for a current user" do
+          get :home, :id => @user
+          response.should have_selector("span.action")
+        end
+      end
     end
   end
 

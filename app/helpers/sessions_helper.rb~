@@ -3,18 +3,6 @@ def sign_in(user)
 cookies.permanent.signed[:remember_token] = [user.id, user.salt]
 self.current_user = user
 end
-def create
-user = User.authenticate(params[:session][:email],
-params[:session][:password])
-if user.nil?
-flash.now[:error] = "Invalid email/password combination."
-@title = "Sign in"
-render 'new'
-else
-sign_in user
-redirect_back_or user
-end
-end
 def current_user=(user)
 @current_user = user
 end
